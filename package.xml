@@ -1,0 +1,30 @@
+学习 http://wiki.ros.org/catkin/package.xml 的笔记
+
+<package format="2"> 表示当前格式为推荐的格式.
+<version>1.2.4</version> 版本号为两个点分隔开的三个数.
+<depend> 标签可以代替 <build_depend>、<build_export_depend>、<exec_depend> 标签，简化操作。如果不知道用什么哪个，那就用 <depend> 标签吧。
+
+通常指定依赖只需指定一次就ok，比如对roscpp的以来，只需 <depend>roscpp</depend> 一个就ok。如果向要依赖的粒度更小，请参考：http://sina.lt/fDFR。
+
+<test_depend> 的依赖包不需要再指定,如果<build>或<exec_depend>已经指定该依赖包.
+<buildtool_depend> 每个包都必须要有的标签.
+<exec_depend> 一般为 shared libraries, executables, Python modules, launch scripts and other files required when running your package.
+
+
+<export>
+  <metapackage />
+</export>
+该标签出现在package.xml中，表示当前包是个元包，元包除了要用 <buildtool_depends> 标签，只允许再加 <exec_depend> 标签来指明元包包括的包。
+另外，元包里许包含一个样板 CMakeLists.txt，内容如下：
+cmake_minimum_required(VERSION 2.8.3)
+project(<元包的名字>)
+find_package(catkin REQUIRED)
+catkin_metapackage()
+
+
+<package> 表示当前格式为遗留的格式, format 1 不推荐.包含4种依赖.
+  <buildtool_depend>
+  <build_depend>
+  <run_depend> 目的一个是指定包要用到的可执行文件,另一个是指明当第三方使用这个ros包的时候,第三方环境中要安装的包.通常, a <run_depend> entry will also be a <build_depend> entry.
+  <test_depend>
+元包的要求同 format 2 一样.
